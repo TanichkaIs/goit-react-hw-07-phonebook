@@ -1,25 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createSlice } from '@reduxjs/toolkit';
-//////
+import axios from "axios";
+
 axios.defaults.baseURL = "https://63dc3833a3ac95cec5b3798b.mockapi.io/contacts/";
 export const fetchTasks = createAsyncThunk("tasks/fetchAll", async () => {
   const response = await axios.get("/tasks");
   return response.data;
 });
 
-
-async (_, thunkAPI) => {
-  try {
-    const response = await axios.get("/tasks");
-    // При успішному запиті повертаємо проміс із даними
-    return response.data;
-  } catch (e) {
-    // При помилці запиту повертаємо проміс
-    // який буде відхилений з текстом помилки
-    return thunkAPI.rejectWithValue(e.message);
-  }
-};
 /////
 export const fetchContacts = createAsyncThunk("contacts/fetchAll",
     async (_, thunkAPI) => {
@@ -33,7 +22,7 @@ export const fetchContacts = createAsyncThunk("contacts/fetchAll",
 
 export const addContact = createAsyncThunk("contacts/addContact",
     async (newContact, thunkAPI) => {
-        console.log("Алёна, а можно ли при кнопке submit на форме получить одним объектом значение всех полей формы, где ключом будет name (или что-то другое) инпута, а значением его value?")
+        console.log()
         try {
             const res = await axios.post("/contacts", newContact)
             const {name, phone, id} = res.data
@@ -59,7 +48,7 @@ export const deleteContact = createAsyncThunk("contacts/deleteContact",
 export const contactsApi = createApi({
   reducerPath: 'contactsApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://63dc3833a3ac95cec5b3798b.mockapi.io/contacts/',
+    baseUrl: axios.defaults.baseURL,
   }),
   // tagTypes: ['Contact'],
   endpoints: builder => ({
